@@ -1,0 +1,118 @@
+@import "fonts.css";
+@import "components.css";
+
+* {
+    -webkit-font-smoothing: antialiased;
+    font-family: "LL Circular";
+}
+
+body {
+    margin: 0;
+    text-align: center;
+
+    color: #444;
+    font-size: 0.95em;
+}
+
+a {
+    color: hsl(181, 41%, 52%);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#app {
+    width: 800px;
+
+    margin: 50px 0px;
+    display: inline-block;
+    text-align: left;
+}
+
+input[type=range] {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.info {
+    position: relative;
+
+    color: #888;
+    font-size: 0.8em;
+    line-height: 1.1;
+}
+
+.info p {
+    margin-left: 6px;
+    width: calc(100% - 2px);
+}
+
+.info p::before {
+    content: "*";
+    position: absolute;
+    left: 0;
+    top: 12px;
+}
+
+.input-box {
+
+}
+
+.input-box.half {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(50% - 10px);
+}
+
+.input-box.half.first {
+    margin-right: 10px;
+}
+
+.input-box.half.last {
+    margin-left: 10px;
+}
+
+.row {
+    padding: 5px 0px;
+}
+
+.row:nth-of-type(2n) {
+    background-color: #f8f8f8;
+}
+
+.row::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.table {
+    border-top: 5px solid #eee;
+    border-bottom: 5px solid #eee;
+}
+
+.row .key {
+    float: left;
+    font-weight: 600;
+}
+
+.row .value {
+    float: right;
+    width: 100px;
+
+    text-align: right;
+}
+
+.row .value.percent {
+    color: #aaa;
+}
+
+.chart {
+    margin: 20px 0px;
+    width: 800px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}

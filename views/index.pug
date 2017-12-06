@@ -1,0 +1,49 @@
+html
+    head
+        link(rel="stylesheet" href="/css/main.css")
+    body
+        #app
+            h1 Effects of House &amp; Senate Bill on {{ STATES[state] }} Residents
+            p The House and Senate Bill impose new tax brackets, remove <a href="http://www.factcheck.org/2017/11/facts-salt-deduction/">SALT deductions</a> and personal exemptions, and up the standard deduction to $12,000 annually.
+            .input-box.half.first
+                .row
+                    .key Salary
+                    .value ${{ income.toLocaleString() }}
+                    input(ref="incomeRange" v-on:input="onIncomeUpdate" 
+                          type="range" min="0" max="100" step="0.5" value="50")
+            .input-box.half.last
+                .row
+                    .key State
+                    select.value(v-on:input="onIncomeUpdate" ref="USState")
+                        option(v-for="(name, abbr) in STATES" v-bind:value="abbr") {{ name }}
+            
+            .input-box.half.first.info
+                p Enter in your gross income, less federal and state taxes.
+            .input-box.half.last.info
+                p Enter in the state that you are a resident of or otherwise pay income taxes towards. Please select even if your state does not collect state income taxes. This will affect the results.
+            .table
+                .row
+                    .key Current Federal Tax Bill
+                    .value {{ toDollar(tax.current) }}
+                .row
+                    .key Current State Tax Bill
+                    .value {{ toDollar(tax.state) }}
+                .row
+                    .key Senate Tax Bill
+                    .value {{ toDollar(tax.senate) }}
+                    .value.percent(v-bind:class="tax.senate <= tax.current ? 'green' : 'red'") {{ toPercent(taxDiff.senate) }}
+                .row
+                    .key House Tax Bill
+                    .value {{ toDollar(tax.house) }}
+                    .value.percent(v-bind:class="tax.house <= tax.current ? 'green' : 'red'") {{ toPercent(taxDiff.house) }}
+            #tax_chart_container.chart
+            #tax_diff_container.chart
+        script(src="/assets/tax-rates.js")
+        script(src="/js/vendor/jquery.min.js")
+        script(src="/js/vendor/highcharts.min.js")
+        script(src="/js/vendor/vue.min.js")
+        script(src="/js/chart.js")
+        script(src="/js/taxes.js")
+        script(src="/js/store.js")
+        script(src="/js/methods.js")
+        script(src="/js/main.js")

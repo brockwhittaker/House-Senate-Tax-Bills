@@ -1,0 +1,17 @@
+@font-face {
+    font-family: "LL Circular";
+    font-weight: 400;
+    src: url(./fonts/circular/circular-book.woff2);
+}
+
+@font-face {
+    font-family: "LL Circular";
+    font-weight: 600;
+    src: url(./fonts/circular/circular-bold.woff2);
+}
+
+@font-face {
+    font-family: "LL Circular";
+    font-weight: 300;
+    src: url(./fonts/circular/circular-light.woff2);
+}

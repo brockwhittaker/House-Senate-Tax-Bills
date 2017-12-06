@@ -1,0 +1,27 @@
+const express = require("express");
+const app = express();
+
+const API = require("./app/api");
+const api = new API();
+
+const bodyParser = require("body-parser");
+
+const PORT = process.env.port || 3000;
+
+// adds compression middleware.
+require("./app/compression")(app);
+
+app.use(bodyParser.json({ limit: "1mb" }));
+app.set("view engine", "pug")
+
+// make `/static/*` => `*` display statically.
+app.use(express.static('static'));
+
+// add routes for express.
+require("./routes")(app, api);
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
+});
+
+process.on('unhandledRejection', r => console.log(r));
