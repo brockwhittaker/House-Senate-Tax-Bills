@@ -184,4 +184,15 @@ input[type=range] {
         width: calc(100% - 20px);
         margin: 10px;
     }
+
+    #us_map .center {
+        text-align: center;
+    }
+
+    #us_map .toggle {
+        position: static;
+        float: none;
+
+        margin-top: 10px;
+    }
 }
