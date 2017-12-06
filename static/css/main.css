@@ -109,6 +109,14 @@ input[type=range] {
     color: #aaa;
 }
 
+.row .percent.green {
+    color: hsl(142, 57%, 65%);
+}
+
+.row .percent.red {
+    color: hsl(0, 57%, 65%);
+}
+
 .chart {
     margin: 20px 0px;
     width: 100%;
