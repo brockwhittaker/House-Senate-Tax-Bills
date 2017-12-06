@@ -21,7 +21,7 @@ html
                     .key Salary
                     .value ${{ income.toLocaleString() }}
                     input(ref="incomeRange" v-on:input="onIncomeUpdate" 
-                          type="range" min="0" max="100" step="0.5" value="50")
+                          type="range" min="0" max="100" step="0.5" value="35")
             .input-box.half.last
                 .row
                     .key State
@@ -57,6 +57,16 @@ html
                     .key House Tax Bill
                     .value {{ toDollar(tax.house) }}
                     .value.percent(v-bind:class="tax.house <= tax.current ? 'green' : 'red'") {{ toPercent(taxDiff.house) }}
+            #us_map
+                h1 Tax Benefit by State (<span style="text-transform: capitalize">{{ MAP_BILL }}</span> Bill) at {{ toDollar(income, 0) }} Income
+                include assets/us-map.svg
+                .key
+                    .block(v-for="color in MAP_COLORS")
+                        .dot(v-bind:style="'background-color: ' + color[1]")
+                        .value {{ (color[0] > 0 ? '+' : '') + color[0] }}%
+                .toggle(data-set-value="MAP_BILL")
+                    .option(data-value="senate" class="active") Senate Bill
+                    .option(data-value="house") House Bill
             #tax_chart_container.chart
             #tax_diff_container.chart
             .about This is a personal project created and maintained by <a href="http://www.lavancier.com/">Brock Whittaker</a>. To submit corrections, updates, or to open issues, please check out the GitHub <a href="https://github.com/brockwhittaker/House-Senate-Tax-Bills/">here</a>.

@@ -118,21 +118,16 @@ const chart = (() => {
     chart.updateData = (c, series) => {
         c.update({
             series,
-        });
-    },
-
-    chart.updateIncome = (c, income) => {
-        c.update({
             xAxis: {
                 plotLines: [{
                     color: "#ccc",
                     dashStyle: "shortdot",
-                    value: income / 5000,
+                    value: store.income / 5000,
                     width: 1,
                 }],
             },
         });
-    };
+    },
 
     chart.payload = payload;
 

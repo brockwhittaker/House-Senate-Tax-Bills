@@ -135,6 +135,34 @@ input[type=range] {
     font-size: 0.8em;
 }
 
+#us_map .key {
+    text-align: center;
+}
+#us_map .key .block {
+    width: 50px;
+    display: inline-block;
+    text-align: left;
+}
+
+#us_map .key .block .dot {
+    display: inline-block;
+    vertical-align: top;
+
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+
+    margin-top: 2px;
+}
+
+#us_map .key .block .value {
+    display: inline-block;
+    vertical-align: top;
+
+    font-size: 0.8em;
+    margin-left: 3px;
+}
+
 @media (max-width: 800px) {
     #app {
         width: calc(100% - 20px);

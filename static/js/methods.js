@@ -31,11 +31,12 @@ const methods = (() => {
                 filingStatus: null,
             };
 
-            return function (e) {
+            return function () {
                 const { incomeRange, USState, numDependents, filingStatus } = this.$refs;
 
                 store.state = USState.value;
                 store.income = taxes.convertLinearRangeToIncome(incomeRange.value);
+                store.numExemptions = 1 + (+numDependents.value);
                 store.tax.state = taxes.calculateStateTaxBurden(
                     store.income,
                     false,
@@ -45,7 +46,7 @@ const methods = (() => {
                 ["current", "senate", "house"].forEach(bill => {
                     store.tax[bill] = taxes.calculateFederalTaxBurden[bill]({
                         income: store.income,
-                        numExemptions: 1 + (+numDependents.value),
+                        numExemptions: store.numExemptions,
                         SALT: store.tax.state,
                     });
                 });
@@ -54,22 +55,15 @@ const methods = (() => {
                     store.taxDiff[bill] = store.tax[bill] / store.tax.current - 1;
                 });
 
-                if (USState.value !== last.USState || numDependents.value !== last.numDependents) {
-                    const payload = methods.renderChart();
+                const payload = methods.renderChart();
+                methods.taxesByState(store.MAP_BILL);
 
-                    if (payload) {
-                        charts.taxDiffChart = payload.taxDiffChart;
-                        charts.taxChart = payload.taxChart;
-                    }
+                if (payload) {
+                    const { taxDiffChart, taxChart } = payload;
 
-                    Object.assign(last, {
-                        USState: USState.value,
-                        numDependents: numDependents.value,
-                        filingStatus: filingStatus.value
-                    });
-                } else {
-                    chart.updateIncome(charts.taxChart, store.income);
-                    chart.updateIncome(charts.taxDiffChart, store.income);
+                    charts.taxDiffChart = taxDiffChart;
+                    charts.taxChart = taxChart;
+                    charts.HAVE_RENDERED = true;
                 }
             }
         })(),
@@ -130,7 +124,9 @@ const methods = (() => {
                 };
             });
 
-            if (!charts.taxChart) {
+            // check to see if any of the charts have rendered.
+            // if not, create new ones.
+            if (!charts.HAVE_RENDERED) {
                 const taxChart = chart.render({
                     data: taxChartData,
                     title: "Federal Taxes as a Percentage of Net Income",
@@ -146,10 +142,58 @@ const methods = (() => {
                 });
 
                 return { taxDiffChart, taxChart };
+            // otherwise re-use the old ones and just update the data.
             } else {
                 chart.updateData(charts.taxChart, taxChartData);
                 chart.updateData(charts.taxDiffChart, taxDiffChartData);
             }
+        },
+
+        taxesByState: (bill) => {
+            const colors = store.MAP_COLORS;
+
+            const taxesByState = Object.keys(STATES).map(state => {
+                const proto = {
+                    state,
+                    stateTaxes: taxes.calculateStateTaxBurden(
+                        store.income,
+                        false,
+                        TAX_RATES[2017].state[state]
+                    ),
+                    taxes: {
+                        current: null,
+                        senate: null,
+                        house: null,
+                    },
+                };
+
+                proto.taxes.current = taxes.calculateFederalTaxBurden.current({
+                    income: store.income,
+                    numExemptions: store.numExemptions,
+                    SALT: proto.stateTaxes,
+                });
+
+                proto.taxes.senate = taxes.calculateFederalTaxBurden.senate({
+                    income: store.income,
+                    numExemptions: store.numExemptions,
+                    SALT: proto.stateTaxes,
+                }) / proto.taxes.current - 1;
+
+                proto.taxes.house = taxes.calculateFederalTaxBurden.house({
+                    income: store.income,
+                    numExemptions: store.numExemptions,
+                    SALT: proto.stateTaxes,
+                }) / proto.taxes.current - 1;
+
+                return proto;
+            });
+
+            taxesByState.forEach(state => {
+                let idx = 0;
+                while (state.taxes[bill] * 100 > colors[idx][0] && colors[idx + 1]) idx++;
+
+                $(`svg #${state.state}`).css("fill", colors[idx][1]);
+            });
         },
 
 
@@ -164,8 +208,12 @@ const methods = (() => {
             return (shouldSign ? '+' : '') + (value * 100).toFixed(2) + '%';
         },
 
-        toDollar: (value) => {
-            return `$` + value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        toDollar: (value, precision) => {
+            precision = typeof precision === "number" ? precision : 2;
+            return `$` + value.toLocaleString(undefined, {
+                minimumFractionDigits: precision,
+                maximumFractionDigits: precision
+            });
         },
     };
 
