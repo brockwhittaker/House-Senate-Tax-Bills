@@ -137,6 +137,7 @@ input[type=range] {
 
 @media (max-width: 800px) {
     #app {
+        width: calc(100% - 20px);
         margin: 10px;
     }
 }
