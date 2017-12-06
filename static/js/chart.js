@@ -42,17 +42,12 @@ const chart = (() => {
                 label: {
                     connectorAllowed: false
                 },
-                pointStart: 0
-            }
-        },
-
-        plotOptions: {
-            series: {
+                pointStart: 0,
                 lineWidth: 2,
                 marker: {
                     enabled: false,
-                }
-            },
+                },
+            }
         },
 
         series: [],
@@ -78,6 +73,12 @@ const chart = (() => {
                     return "$" + (this.value * 5000 / 1000) + "k";
                 },
             },
+            plotLines: [{
+                color: '#ccc', // Color value
+                dashStyle: 'shortdot', // Style of the plot line. Default to solid
+                value: null, // Value of where the line will appear
+                width: 1 // Width of the line
+            }]
         },
 
         responsive: {
@@ -106,10 +107,25 @@ const chart = (() => {
     };
 
     chart.render = (opts) => {
+        payload.xAxis.plotLines[0].value = store.income / 5000;
         payload.series = opts.data;
         payload.title.text = opts.title;
         payload.yAxis.title.text = opts.yAxisText;
-        Highcharts.chart(opts.container, payload);
+
+        return Highcharts.chart(opts.container, payload);
+    };
+
+    chart.updateIncome = (c, income) => {
+        c.update({
+            xAxis: {
+                plotLines: [{
+                    color: "#ccc",
+                    dashStyle: "shortdot",
+                    value: income / 5000,
+                    width: 1,
+                }],
+            },
+        });
     };
 
     chart.payload = payload;

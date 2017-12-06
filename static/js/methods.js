@@ -25,6 +25,11 @@ const methods = {
             filingStatus: null,
         };
 
+        let charts = {
+            taxDiffChart: null,
+            taxChart: null,
+        };
+
         return function (e) {
             const { incomeRange, USState, numDependents, filingStatus } = this.$refs;
 
@@ -49,13 +54,17 @@ const methods = {
             });
 
             if (USState.value !== last.USState || numDependents.value !== last.numDependents) {
-                methods.renderChart();
+                const { taxDiffChart, taxChart } = methods.renderChart();
+                Object.assign(charts, { taxDiffChart, taxChart });
 
                 Object.assign(last, {
                     USState: USState.value,
                     numDependents: numDependents.value,
                     filingStatus: filingStatus.value
                 });
+            } else {
+                chart.updateIncome(charts.taxChart, store.income);
+                chart.updateIncome(charts.taxDiffChart, store.income);
             }
         }
     })(),
@@ -76,7 +85,7 @@ const methods = {
             { bill: "house", name: "House Proposed Federal Taxes", color: "#b9e48c", dashStyle: "longdash" }
         ];
 
-        const d1 = schedules.map(schedule => {
+        const taxChartData = schedules.map(schedule => {
             return {
                 name: schedule.name,
                 data: arr.map(income => {
@@ -91,7 +100,7 @@ const methods = {
             };
         });
 
-        const d2 = schedules.slice(1).map(schedule => {
+        const taxDiffChartData = schedules.slice(1).map(schedule => {
             return {
                 name: schedule.name,
                 data: arr.map(income => {
@@ -116,19 +125,21 @@ const methods = {
             };
         });
 
-        chart.render({
-            data: d1,
+        const taxChart = chart.render({
+            data: taxChartData,
             title: "Federal Taxes as a Percentage of Net Income",
             yAxisText: "Percent of Income to Federal Tax",
             container: "tax_chart_container",
         })
 
-        chart.render({
-            data: d2,
+        const taxDiffChart = chart.render({
+            data: taxDiffChartData,
             title: "New Taxes as a Percentage of Old Taxes",
             yAxisText: "% Taxes Paid by Plan vs. Current",
             container: "tax_diff_container",
         });
+
+        return { taxDiffChart, taxChart };
     },
 
 
