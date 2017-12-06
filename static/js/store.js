@@ -1,6 +1,7 @@
 const store = {
     income: 0,
     numExemptions: 1,
+    filingStatus: "single",
     tax: {
         current: 0,
         senate: 0,

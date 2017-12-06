@@ -1,14 +1,24 @@
 const taxes = (() => {
     // this is the current tax schedule for 2017.
     const CURRENT_TAXES = {
-        "brackets": [
-            [0.1, 9325],
-            [0.15, 37950],
-            [0.25, 91900],
-            [0.33, 191900],
-            [0.35, 416700],
-            [0.396, Infinity],
-        ],
+        "brackets": {
+            single: [
+                [0.1, 9325],
+                [0.15, 37950],
+                [0.25, 91900],
+                [0.33, 191900],
+                [0.35, 416700],
+                [0.396, Infinity],
+            ],
+            married: [
+                [0.1, 18650],
+                [0.15, 75900],
+                [0.25, 153100],
+                [0.33, 233350],
+                [0.35, 470700],
+                [0.396, Infinity],
+            ],
+        },
         standardDeduction: 6350,
         exemption: 4050,
         DEDUCT: { SALT: true },
@@ -16,35 +26,54 @@ const taxes = (() => {
 
     // this is the current senate bill tax schedule for 2018.
     const SENATE_BILL = {
-        brackets: [
-            [0.1, 9525],
-            [0.12, 38700],
-            [0.22, 70000],
-            [0.24, 160000],
-            [0.32, 200000],
-            [0.35, 500000],
-            [0.385, Infinity],
-        ],
+        brackets: {
+            single: [
+                [0.1, 9525],
+                [0.12, 38700],
+                [0.22, 70000],
+                [0.24, 160000],
+                [0.32, 200000],
+                [0.35, 500000],
+                [0.385, Infinity],
+            ],
+            married: [
+                [0.1, 19050],
+                [0.12, 77400],
+                [0.22, 140000],
+                [0.24, 320000],
+                [0.32, 400000],
+                [0.35, 1000000],
+                [0.385, Infinity],
+            ]
+        },
         standardDeduction: 12000,
         exemption: 0,
         DEDUCT: { SALT: false },
     };
 
     const HOUSE_BILL = {
-        brackets: [
-            [0.12, 45000],
-            [0.25, 200000],
-            [0.35, 500000],
-            [0.396, Infinity],
-        ],
+        brackets: {
+            single: [
+                [0.12, 45000],
+                [0.25, 200000],
+                [0.35, 500000],
+                [0.396, Infinity],
+            ],
+            married: [
+                [0.12, 90000],
+                [0.25, 260000],
+                [0.35, 1000000],
+                [0.396, Infinity],
+            ],
+        },
         standardDeduction: 12000,
         exemption: 0,
         DEDUCT: { SALT: false },
     };
 
     const calculateFederalTaxBurden = (payload, tax_structure) => {
-        const { income, numExemptions } = payload;
-        const { brackets } = tax_structure;
+        const { income, numExemptions, filingStatus } = payload;
+        const brackets = tax_structure.brackets[filingStatus];
 
         let x = 0;
         let tax = 0;

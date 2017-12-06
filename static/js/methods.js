@@ -37,6 +37,8 @@ const methods = (() => {
                 store.state = USState.value;
                 store.income = taxes.convertLinearRangeToIncome(incomeRange.value);
                 store.numExemptions = 1 + (+numDependents.value);
+                store.filingStatus = filingStatus.value;
+
                 store.tax.state = taxes.calculateStateTaxBurden(
                     store.income,
                     false,
@@ -48,6 +50,7 @@ const methods = (() => {
                         income: store.income,
                         numExemptions: store.numExemptions,
                         SALT: store.tax.state,
+                        filingStatus: store.filingStatus,
                     });
                 });
 
@@ -64,6 +67,10 @@ const methods = (() => {
                     charts.taxDiffChart = taxDiffChart;
                     charts.taxChart = taxChart;
                     charts.HAVE_RENDERED = true;
+                }
+
+                if (typeof router !== "undefined") {
+                    router.setHash(`/i/${store.income}/s/${store.filingStatus}/d/${store.numExemptions - 1}/`);
                 }
             }
         })(),
@@ -92,6 +99,7 @@ const methods = (() => {
                             income: income,
                             numExemptions,
                             SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
+                            filingStatus: store.filingStatus,
                         }) / income * 100;
                     }),
                     color: schedule.color,
@@ -107,11 +115,13 @@ const methods = (() => {
                             income: income,
                             numExemptions,
                             SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
+                            filingStatus: store.filingStatus,
                         }) / income * 100;
                         const percentTaxOnCurrent = taxes.calculateFederalTaxBurden.current({
                             income: income,
                             numExemptions,
                             SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
+                            filingStatus: store.filingStatus,
                         }) / income * 100;
 
                         const value = ((percentTaxOnBill / percentTaxOnCurrent - 1) * 100) || 0;
@@ -171,18 +181,21 @@ const methods = (() => {
                     income: store.income,
                     numExemptions: store.numExemptions,
                     SALT: proto.stateTaxes,
+                    filingStatus: store.filingStatus,
                 });
 
                 proto.taxes.senate = taxes.calculateFederalTaxBurden.senate({
                     income: store.income,
                     numExemptions: store.numExemptions,
                     SALT: proto.stateTaxes,
+                    filingStatus: store.filingStatus,
                 }) / proto.taxes.current - 1;
 
                 proto.taxes.house = taxes.calculateFederalTaxBurden.house({
                     income: store.income,
                     numExemptions: store.numExemptions,
                     SALT: proto.stateTaxes,
+                    filingStatus: store.filingStatus,
                 }) / proto.taxes.current - 1;
 
                 return proto;
