@@ -27,7 +27,17 @@ html
                     .key State
                     select.value(v-on:input="onIncomeUpdate" ref="USState")
                         option(v-for="(name, abbr) in STATES" v-bind:value="abbr") {{ name }}
-            
+            .input-box.half.first
+                .row
+                    .key Filing Status
+                    select.value(v-on:input="onIncomeUpdate" ref="filingStatus")
+                        option(value="single") Single
+                        option(value="married") Married
+            .input-box.half.last
+                .row
+                    .key Number of Dependents
+                    input.value(v-on:input="onIncomeUpdate" ref="numDependents"
+                                type="number" min="0" max="10")
             .input-box.half.first.info
                 p Enter in your gross income, less federal and state taxes.
             .input-box.half.last.info

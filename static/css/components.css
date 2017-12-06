@@ -62,3 +62,10 @@ input[type=range]::-ms-thumb {
   background: #ffffff;
   cursor: pointer;
 }
+
+input[type=number] {
+    padding: 1.5px 0px;
+    background-color: #f8f8f8;
+    border: 1px solid #999;
+    border-radius: 5px;
+}
