@@ -1,5 +1,126 @@
-@import "fonts.css";
-@import "components.css";
+@font-face {
+    font-family: "LL Circular";
+    font-weight: 400;
+    src: url(./fonts/circular/circular-book.woff2);
+}
+
+@font-face {
+    font-family: "LL Circular";
+    font-weight: 600;
+    src: url(./fonts/circular/circular-bold.woff2);
+}
+
+@font-face {
+    font-family: "LL Circular";
+    font-weight: 300;
+    src: url(./fonts/circular/circular-light.woff2);
+}
+
+input[type=range] {
+    -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
+    width: 100%; /* Specific width is required for Firefox. */
+    background: transparent; /* Otherwise white in Chrome */
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+}
+
+input[type=range]:focus {
+    outline: none; /* Removes the blue border. You should probably do some kind of focus styling for accessibility reasons though. */
+}
+
+input[type=range]::-ms-track {
+    width: 100%;
+    cursor: pointer;
+
+    /* Hides the slider so custom styles can be added */
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+input[type=range] {
+    background: #ccc;
+    height: 3px;
+    border-radius: 4px;
+}
+
+/* Special styling for WebKit/Blink */
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: 1px solid #000000;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: #ccc;
+    cursor: pointer;
+    margin-top: -0px; /* You need to specify a margin in Chrome, but in Firefox and IE it is automatic */
+}
+
+/* All the same stuff for Firefox */
+input[type=range]::-moz-range-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 16px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+/* All the same stuff for IE */
+input[type=range]::-ms-thumb {
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border: 1px solid #000000;
+    height: 16px;
+    width: 16px;
+    border-radius: 3px;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+input[type=number] {
+    padding: 1.5px 0px;
+    background-color: #f8f8f8;
+    border: 1px solid #999;
+    border-radius: 5px;
+}
+
+#us_map .toggle {
+    float: right;
+    position: relative;
+    top: -18px;
+}
+
+.toggle {
+    display: inline-block;
+    background-color: #fafafa;
+
+    border: 1px solid #aaa;
+    border-radius: 10px;
+
+    font-size: 0.8em;
+
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.toggle > div:first-of-type {
+    border-right: 1px solid #ccc;
+}
+
+.toggle .option {
+    display: inline-block;
+    vertical-align: top;
+
+    padding: 3px 10px;
+}
+
+.toggle .option.active {
+    background-color: #ddd;
+}
 
 * {
     -webkit-font-smoothing: antialiased;

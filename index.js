@@ -10,6 +10,8 @@ const ENV = process.env.env;
 
 const PORT = ENV === "PROD" ? 80 : 3000;
 
+const minify = require("./app/minify");
+
 // adds compression middleware.
 require("./app/compression")(app);
 
@@ -21,6 +23,8 @@ app.use(express.static('static'));
 
 // add routes for express.
 require("./routes")(app, api);
+
+minify.js();
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);

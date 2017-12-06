@@ -20,8 +20,8 @@ module.exports = (app, api) => {
     });
 
     app.get("*", (req, res) => {
-        let ip = req.connection.remoteAddress.replace(/^::ffff:/, "");
         res.render("index");
+        let ip = req.connection.remoteAddress.replace(/^::ffff:/, "");
         fs.appendFile(path.join(__dirname, "..", "logs", "ip.txt"), `${ip},${new Date().getTime()}\n`);
     });
 };
