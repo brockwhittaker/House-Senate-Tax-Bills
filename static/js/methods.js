@@ -17,144 +17,157 @@ function debounce(func, wait, immediate) {
 	};
 };
 
-const methods = {
-    onIncomeUpdate: (() => {
-        let last = {
-            USState: null,
-            numDependents: null,
-            filingStatus: null,
-        };
+const methods = (() => {
+    let charts = {
+        taxDiffChart: null,
+        taxChart: null,
+    };
 
-        let charts = {
-            taxDiffChart: null,
-            taxChart: null,
-        };
+    const methods = {
+        onIncomeUpdate: (() => {
+            let last = {
+                USState: null,
+                numDependents: null,
+                filingStatus: null,
+            };
 
-        return function (e) {
-            const { incomeRange, USState, numDependents, filingStatus } = this.$refs;
+            return function (e) {
+                const { incomeRange, USState, numDependents, filingStatus } = this.$refs;
 
-            store.state = USState.value;
-            store.income = taxes.convertLinearRangeToIncome(incomeRange.value);
-            store.tax.state = taxes.calculateStateTaxBurden(
-                store.income,
-                false,
-                TAX_RATES[2017].state[USState.value]
-            );
+                store.state = USState.value;
+                store.income = taxes.convertLinearRangeToIncome(incomeRange.value);
+                store.tax.state = taxes.calculateStateTaxBurden(
+                    store.income,
+                    false,
+                    TAX_RATES[2017].state[USState.value]
+                );
 
-            ["current", "senate", "house"].forEach(bill => {
-                store.tax[bill] = taxes.calculateFederalTaxBurden[bill]({
-                    income: store.income,
-                    numExemptions: 1 + (+numDependents.value),
-                    SALT: store.tax.state,
+                ["current", "senate", "house"].forEach(bill => {
+                    store.tax[bill] = taxes.calculateFederalTaxBurden[bill]({
+                        income: store.income,
+                        numExemptions: 1 + (+numDependents.value),
+                        SALT: store.tax.state,
+                    });
                 });
-            });
 
-            ["senate", "house"].forEach(bill => {
-                store.taxDiff[bill] = store.tax[bill] / store.tax.current - 1;
-            });
-
-            if (USState.value !== last.USState || numDependents.value !== last.numDependents) {
-                const { taxDiffChart, taxChart } = methods.renderChart();
-                Object.assign(charts, { taxDiffChart, taxChart });
-
-                Object.assign(last, {
-                    USState: USState.value,
-                    numDependents: numDependents.value,
-                    filingStatus: filingStatus.value
+                ["senate", "house"].forEach(bill => {
+                    store.taxDiff[bill] = store.tax[bill] / store.tax.current - 1;
                 });
-            } else {
-                chart.updateIncome(charts.taxChart, store.income);
-                chart.updateIncome(charts.taxDiffChart, store.income);
+
+                if (USState.value !== last.USState || numDependents.value !== last.numDependents) {
+                    const payload = methods.renderChart();
+
+                    if (payload) {
+                        charts.taxDiffChart = payload.taxDiffChart;
+                        charts.taxChart = payload.taxChart;
+                    }
+
+                    Object.assign(last, {
+                        USState: USState.value,
+                        numDependents: numDependents.value,
+                        filingStatus: filingStatus.value
+                    });
+                } else {
+                    chart.updateIncome(charts.taxChart, store.income);
+                    chart.updateIncome(charts.taxDiffChart, store.income);
+                }
             }
-        }
-    })(),
+        })(),
 
-    renderChart: () => {
-        const state = vue.$refs.USState.value;
-        const numDependents = vue.$refs.numDependents.value;
-        const numExemptions = 1 + (+numDependents);
+        renderChart: () => {
+            const state = vue.$refs.USState.value;
+            const numDependents = vue.$refs.numDependents.value;
+            const numExemptions = 1 + (+numDependents);
 
-        const arr = [];
-        for (let x = 0; x < 100; x++) {
-            arr[x] = x * 5000;
-        }
+            const arr = [];
+            for (let x = 0; x < 100; x++) {
+                arr[x] = x * 5000;
+            }
 
-        const schedules = [
-            { bill: "current", name: "Current Federal Taxes", color: "#e8757c" },
-            { bill: "senate", name: "Senate Proposed Federal Taxes", color: "#51badc", dashStyle: "longdash" },
-            { bill: "house", name: "House Proposed Federal Taxes", color: "#b9e48c", dashStyle: "longdash" }
-        ];
+            const schedules = [
+                { bill: "current", name: "Current Federal Taxes", color: "#e8757c" },
+                { bill: "senate", name: "Senate Proposed Federal Taxes", color: "#51badc", dashStyle: "longdash" },
+                { bill: "house", name: "House Proposed Federal Taxes", color: "#b9e48c", dashStyle: "longdash" }
+            ];
 
-        const taxChartData = schedules.map(schedule => {
-            return {
-                name: schedule.name,
-                data: arr.map(income => {
-                    return taxes.calculateFederalTaxBurden[schedule.bill]({
-                        income: income,
-                        numExemptions,
-                        SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
-                    }) / income * 100;
-                }),
-                color: schedule.color,
-                dashStyle: schedule.dashStyle,
-            };
-        });
+            const taxChartData = schedules.map(schedule => {
+                return {
+                    name: schedule.name,
+                    data: arr.map(income => {
+                        return taxes.calculateFederalTaxBurden[schedule.bill]({
+                            income: income,
+                            numExemptions,
+                            SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
+                        }) / income * 100;
+                    }),
+                    color: schedule.color,
+                    dashStyle: schedule.dashStyle,
+                };
+            });
 
-        const taxDiffChartData = schedules.slice(1).map(schedule => {
-            return {
-                name: schedule.name,
-                data: arr.map(income => {
-                    const percentTaxOnBill = taxes.calculateFederalTaxBurden[schedule.bill]({
-                        income: income,
-                        numExemptions,
-                        SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
-                    }) / income * 100;
-                    const percentTaxOnCurrent = taxes.calculateFederalTaxBurden.current({
-                        income: income,
-                        numExemptions,
-                        SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
-                    }) / income * 100;
+            const taxDiffChartData = schedules.slice(1).map(schedule => {
+                return {
+                    name: schedule.name,
+                    data: arr.map(income => {
+                        const percentTaxOnBill = taxes.calculateFederalTaxBurden[schedule.bill]({
+                            income: income,
+                            numExemptions,
+                            SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
+                        }) / income * 100;
+                        const percentTaxOnCurrent = taxes.calculateFederalTaxBurden.current({
+                            income: income,
+                            numExemptions,
+                            SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
+                        }) / income * 100;
 
-                    const value = ((percentTaxOnBill / percentTaxOnCurrent - 1) * 100) || 0;
+                        const value = ((percentTaxOnBill / percentTaxOnCurrent - 1) * 100) || 0;
 
-                    // change to logarithmic y-axis tomorrow.
-                    return Math.min(500, value);
-                }),
-                color: schedule.color,
-                dashStyle: schedule.dashStyle,
-            };
-        });
+                        // change to logarithmic y-axis tomorrow.
+                        return Math.min(500, value);
+                    }),
+                    color: schedule.color,
+                    dashStyle: schedule.dashStyle,
+                };
+            });
 
-        const taxChart = chart.render({
-            data: taxChartData,
-            title: "Federal Taxes as a Percentage of Net Income",
-            yAxisText: "Percent of Income to Federal Tax",
-            container: "tax_chart_container",
-        })
+            if (!charts.taxChart) {
+                const taxChart = chart.render({
+                    data: taxChartData,
+                    title: "Federal Taxes as a Percentage of Net Income",
+                    yAxisText: "Percent of Income to Federal Tax",
+                    container: "tax_chart_container",
+                })
 
-        const taxDiffChart = chart.render({
-            data: taxDiffChartData,
-            title: "New Taxes as a Percentage of Old Taxes",
-            yAxisText: "% Taxes Paid by Plan vs. Current",
-            container: "tax_diff_container",
-        });
+                const taxDiffChart = chart.render({
+                    data: taxDiffChartData,
+                    title: "New Taxes as a Percentage of Old Taxes",
+                    yAxisText: "% Taxes Paid by Plan vs. Current",
+                    container: "tax_diff_container",
+                });
 
-        return { taxDiffChart, taxChart };
-    },
+                return { taxDiffChart, taxChart };
+            } else {
+                chart.updateData(charts.taxChart, taxChartData);
+                chart.updateData(charts.taxDiffChart, taxDiffChartData);
+            }
+        },
 
 
-    // this changes a decimal to a properly formatted percentage.
-    toPercent: (value) => {
-        var shouldSign = value > 0;
+        // this changes a decimal to a properly formatted percentage.
+        toPercent: (value) => {
+            var shouldSign = value > 0;
 
-        if (isNaN(value)) {
-            return 'N/A';
-        }
+            if (isNaN(value)) {
+                return 'N/A';
+            }
 
-        return (shouldSign ? '+' : '') + (value * 100).toFixed(2) + '%';
-    },
+            return (shouldSign ? '+' : '') + (value * 100).toFixed(2) + '%';
+        },
 
-    toDollar: (value) => {
-        return `$` + value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    },
-};
+        toDollar: (value) => {
+            return `$` + value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        },
+    };
+
+    return methods;
+})();

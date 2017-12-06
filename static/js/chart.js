@@ -115,6 +115,12 @@ const chart = (() => {
         return Highcharts.chart(opts.container, payload);
     };
 
+    chart.updateData = (c, series) => {
+        c.update({
+            series,
+        });
+    },
+
     chart.updateIncome = (c, income) => {
         c.update({
             xAxis: {
