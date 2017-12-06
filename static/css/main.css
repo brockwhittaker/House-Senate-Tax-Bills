@@ -126,6 +126,10 @@ input[type=range] {
     overflow: hidden;
 }
 
+.about {
+    font-size: 0.8em;
+}
+
 @media (max-width: 800px) {
     #app {
         margin: 20px;

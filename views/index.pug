@@ -39,6 +39,7 @@ html
                     .value.percent(v-bind:class="tax.house <= tax.current ? 'green' : 'red'") {{ toPercent(taxDiff.house) }}
             #tax_chart_container.chart
             #tax_diff_container.chart
+            .about This is a personal project created and maintained by <a href="http://www.lavancier.com/">Brock Whittaker</a>. To submit corrections, updates, or to open issues, please check out the GitHub <a href="https://github.com/brockwhittaker/House-Senate-Tax-Bills/">here</a>.
         script(src="/assets/tax-rates.js")
         script(src="/js/vendor/jquery.min.js")
         script(src="/js/vendor/highcharts.min.js")
