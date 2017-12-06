@@ -24,7 +24,7 @@ a:hover {
 }
 
 #app {
-    width: 800px;
+    max-width: 800px;
 
     margin: 50px 0px;
     display: inline-block;
@@ -111,8 +111,15 @@ input[type=range] {
 
 .chart {
     margin: 20px 0px;
-    width: 800px;
+    width: 100%;
+    max-width: 800px;
     border: 1px solid #ddd;
     border-radius: 10px;
     overflow: hidden;
+}
+
+@media (max-width: 800px) {
+    #app {
+        margin: 20px;
+    }
 }
