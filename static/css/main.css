@@ -334,6 +334,12 @@ input[type=range] {
     margin-right: 5px;
 }
 
+iframe {
+    width: 100vw;
+    height: 100vh;
+    border: none;
+}
+
 @media (max-width: 800px) {
     #app {
         width: calc(100% - 20px);
