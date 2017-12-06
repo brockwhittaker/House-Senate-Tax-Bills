@@ -4,7 +4,7 @@ const path = require("path");
 const taxes = require("../app/taxes");
 
 module.exports = (app, api) => {
-    app.get("/", (req, res) => {
+    app.get("*", (req, res) => {
         let ip = req.connection.remoteAddress.replace(/^::ffff:/, "");
         res.render("index");
         fs.appendFile(path.join(__dirname, "..", "logs", "ip.txt"), `${ip},${new Date().getTime()}\n`);

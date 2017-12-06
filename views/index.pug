@@ -3,6 +3,11 @@ html
         title 2018 Tax Bill Effects | flu.io
         link(rel="stylesheet" href="/css/main.css")
         meta(name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no")
+        meta(property="og:url"           content="https://flu.io/2018-tax-bills/")
+        meta(property="og:type"          content="website")
+        meta(property="og:title"         content="2018 Tax Bill Effects")
+        meta(property="og:description"   content="Effects of House & Senate Bill on Income Taxes")
+        meta(property="og:image"         content="http://flu.io/assets/og-preview.png")
         // Global site tag (gtag.js) - Google Analytics
         script(async src="https://www.googletagmanager.com/gtag/js?id=UA-110789503-1")
         script.
@@ -13,8 +18,28 @@ html
             gtag('config', 'UA-110789503-1');
 
     body
+        <div id="fb-root"></div>
+        script.
+            (function(d, s, id) {
+              var js, fjs = d.getElementsByTagName(s)[0];
+              if (d.getElementById(id)) return;
+              js = d.createElement(s); js.id = id;
+              js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=152526848700598';
+              fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));</script>
+
         #app
             h1 Effects of House &amp; Senate Bill on {{ STATES[state] }} Residents
+            .social
+                a#tweet.button(class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Calculate how the new tax bills will affect you. %23TaxReform&url=http://flu.io/2018-tax-bills/" target="_blank")
+                    i
+                    span Tweet
+
+                // Your share button code
+                div.button(class="fb-share-button" data-href="http://flu.io/2018-tax-bills/" data-layout="button" data-size="small" data-mobile-iframe="true")
+                    a(class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://flu.io/2018-tax-bills/&amp;src=sdkpreparse")
+                        Share
+
             p The House and Senate Bill impose new tax brackets, remove <a href="http://www.factcheck.org/2017/11/facts-salt-deduction/">SALT deductions</a> and personal exemptions, and up the standard deduction to $12,000 annually.
             .input-box.half.first
                 .row
