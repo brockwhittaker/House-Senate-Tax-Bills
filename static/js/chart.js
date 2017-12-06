@@ -23,8 +23,14 @@ const chart = (() => {
         yAxis: {
             title: {
                 text: 'Percent of Income to Federal Tax'
-            }
+            },
+            labels: {
+                formatter: function () {
+                    return `${this.value}%`;
+                },
+            },
         },
+
         legend: {
             layout: 'vertical',
             align: 'right',
@@ -71,14 +77,6 @@ const chart = (() => {
             },
         },
 
-        yAxis: {
-            labels: {
-                formatter: function () {
-                    return `${this.value}%`;
-                },
-            },
-        },
-
         responsive: {
             rules: [{
                 condition: {
@@ -109,6 +107,7 @@ const chart = (() => {
         Highcharts.chart('tax_chart_container', payload);
         payload.series = d2;
         payload.title.text = "New Taxes as a Percentage of Old Taxes";
+        payload.yAxis.title.text = "% Taxes Paid by Plan vs. Current"
         Highcharts.chart('tax_diff_container', payload);
     };
 
