@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node index.js",
-    "start": "env=PROD node app.js"
+    "start": "env=PROD node index.js"
   },
   "author": "Brock Whittaker",
   "license": "ISC",
