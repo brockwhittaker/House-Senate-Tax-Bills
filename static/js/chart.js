@@ -7,7 +7,7 @@ const chart = (() => {
         },
 
         title: {
-            text: 'Federal Taxes as a Percentage of Net Income',
+            text: null,
             style: {
                 fontWeight: 600,
             },
@@ -22,7 +22,7 @@ const chart = (() => {
 
         yAxis: {
             title: {
-                text: 'Percent of Income to Federal Tax'
+                text: null,
             },
             labels: {
                 formatter: function () {
@@ -70,6 +70,9 @@ const chart = (() => {
         },
 
         xAxis: {
+            title: {
+                text: "Salary",
+            },
             labels: {
                 formatter: function () {
                     return "$" + (this.value * 5000 / 1000) + "k";
@@ -102,13 +105,11 @@ const chart = (() => {
         },
     };
 
-    chart.render = (d1, d2) => {
-        payload.series = d1;
-        Highcharts.chart('tax_chart_container', payload);
-        payload.series = d2;
-        payload.title.text = "New Taxes as a Percentage of Old Taxes";
-        payload.yAxis.title.text = "% Taxes Paid by Plan vs. Current"
-        Highcharts.chart('tax_diff_container', payload);
+    chart.render = (opts) => {
+        payload.series = opts.data;
+        payload.title.text = opts.title;
+        payload.yAxis.title.text = opts.yAxisText;
+        Highcharts.chart(opts.container, payload);
     };
 
     chart.payload = payload;

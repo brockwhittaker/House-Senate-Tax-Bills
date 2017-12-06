@@ -116,7 +116,19 @@ const methods = {
             };
         });
 
-        chart.render(d1, d2);
+        chart.render({
+            data: d1,
+            title: "Federal Taxes as a Percentage of Net Income",
+            yAxisText: "Percent of Income to Federal Tax",
+            container: "tax_chart_container",
+        })
+
+        chart.render({
+            data: d2,
+            title: "New Taxes as a Percentage of Old Taxes",
+            yAxisText: "% Taxes Paid by Plan vs. Current",
+            container: "tax_diff_container",
+        });
     },
 
 
