@@ -135,9 +135,25 @@ input[type=range] {
     font-size: 0.8em;
 }
 
+#us_map {
+    padding: 10px 10px 15px 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 20px 0px;
+}
+
+/* replicate highcharts design. */
+#us_map h1 {
+    margin: 0;
+
+    font-size: 18px;
+    text-align: center;
+}
+
 #us_map .key {
     text-align: center;
 }
+
 #us_map .key .block {
     width: 50px;
     display: inline-block;
