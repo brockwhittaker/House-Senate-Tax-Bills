@@ -12,6 +12,11 @@ body {
 
     color: #444;
     font-size: 0.95em;
+
+    overflow: auto;
+    overflow-x: hidden;
+    width: 100vw;
+    height: 100vh;
 }
 
 a {
