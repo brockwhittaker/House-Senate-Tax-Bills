@@ -106,7 +106,10 @@ const methods = {
                         SALT: taxes.calculateStateTaxBurden(income, false, TAX_RATES[2017].state[state]),
                     }) / income * 100;
 
-                    return (percentTaxOnBill / percentTaxOnCurrent - 1) * 100;
+                    const value = ((percentTaxOnBill / percentTaxOnCurrent - 1) * 100) || 0;
+
+                    // change to logarithmic y-axis tomorrow.
+                    return Math.min(500, value);
                 }),
                 color: schedule.color,
                 dashStyle: schedule.dashStyle,
