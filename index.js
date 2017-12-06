@@ -6,7 +6,9 @@ const api = new API();
 
 const bodyParser = require("body-parser");
 
-const PORT = process.env.port || 3000;
+const ENV = process.env.env;
+
+const PORT = ENV === "PROD" ? 80 : 3000;
 
 // adds compression middleware.
 require("./app/compression")(app);
