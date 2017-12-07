@@ -9,3 +9,7 @@ It's a simple `npm install` and `npm run dev` to run in development on port `300
 ## Logging
 
 This logs IP addresses. Create `/logs/` inside the repository, so just run `mkdir logs` inside the repository folder to collect IP addresses.
+
+## Stack
+
+The stack is Node (v8.2.1+), express.js, pug (templating engine), and vue.js.
