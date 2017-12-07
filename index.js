@@ -16,7 +16,7 @@ const minify = require("./app/minify");
 require("./app/compression")(app);
 
 app.use(bodyParser.json({ limit: "1mb" }));
-app.set("view engine", "pug")
+app.set("view engine", "pug");
 
 // make `/static/*` => `*` display statically.
 app.use(express.static('static'));
