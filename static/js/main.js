@@ -18,6 +18,7 @@
         el: "#app",
         data: store,
         methods,
+        mounted: () => $("#app").addClass("show"),
     });
 
     $("option[value='CA']").prop("selected", true);
